@@ -68,7 +68,7 @@ def build_graph(agent_node: Callable[..., MyMessagesState]) -> CompiledStateGrap
     return workflow.compile()
 
 
-def run_execution_loop(app: CompiledStateGraph, query: str) -> None:
+def run_execution_loop(agent_graph: CompiledStateGraph, query: str) -> None:
     """
     Handles the I/O: sends the query to the app and prints the stream.
     """
@@ -82,13 +82,26 @@ def run_execution_loop(app: CompiledStateGraph, query: str) -> None:
 
     try:
         # noinspection PyTypeChecker
-        output_state = app.invoke(input_state)
+        output_state = agent_graph.invoke(input_state)
         for m in output_state["messages"]:
             m.pretty_print()
         print("==============================")
 
     except Exception as e:
         print(f"Error during execution: {e}")
+
+
+def save_graph_image(agent_graph: CompiledStateGraph) -> None:
+    """
+    Saves the graph visualization as an image file.
+    """
+    try:
+        graph_image = agent_graph.get_graph(xray=True).draw_mermaid_png()
+        with open("agent_graph.png", "wb") as f:
+            f.write(graph_image)
+        print("Graph image saved as agent_graph.png")
+    except Exception as e:
+        print("Failed to save graph image.")
 
 
 def main() -> None:
@@ -99,11 +112,13 @@ def main() -> None:
     agent_node = build_agent_node()
 
     # 2. Build Logic
-    agent_app = build_graph(agent_node)
+    agent_graph = build_graph(agent_node)
+
+    save_graph_image(agent_graph)
 
     # 3. Execute
     user_query = "请计算123乘以456。"
-    run_execution_loop(agent_app, user_query)
+    run_execution_loop(agent_graph, user_query)
 
 
 if __name__ == "__main__":
