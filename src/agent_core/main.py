@@ -1,43 +1,109 @@
+from typing import Callable
+
+from langchain_core.language_models import LanguageModelInput
+from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.runnables import Runnable
 from langchain_openai import ChatOpenAI
+from langgraph.graph import START, StateGraph
+from langgraph.graph.state import CompiledStateGraph
+from langgraph.prebuilt import ToolNode, tools_condition
 
 from agent_core.config import settings
+from agent_core.state import MyMessagesState
+from agent_core.tools import tools
 
 
-def test_llm_connection() -> None:
+def build_agent_node() -> Callable[..., MyMessagesState]:
     """
-    测试 LLM 连接并打印回复
+    Initializes the LLM and binds tools to it, returning a Runnable that represents the agent node.
     """
-    print(f"--- 正在初始化模型: {settings.default_model} ---")
+    print(f"--- Initializing Model: {settings.default_model} ---")
 
-    # 1. 初始化 LLM
-    # 从 settings 中读取配置，而不是硬编码
     llm = ChatOpenAI(
         model=settings.default_model,
         api_key=settings.siliconflow_api_key,
         base_url=settings.base_url,
-        temperature=0.7,
+        temperature=0.7
     )
+    # Bind tools immediately here
+    llm_with_tools: Runnable[LanguageModelInput, AIMessage] = llm.bind_tools(tools)
 
-    # 2. 测试连接
-    print(">>> 正在发送请求...")
+    # Define the Agent Node
+    # Logic: Call the LLM with the current conversation state
+    def call_model(state: MyMessagesState) -> MyMessagesState:
+        return {
+            "messages": [llm_with_tools.invoke(state["messages"])],
+            "llm_calls": state.get('llm_calls', 0) + 1,
+        }
+
+    return call_model
+
+
+def build_graph(agent_node: Callable[..., MyMessagesState]) -> CompiledStateGraph:
+    """
+    Constructs the StateGraph logic (Nodes & Edges).
+    Returns a compiled application ready to run.
+    :param agent_node: The agent node callable.
+    """
+
+    # noinspection PyTypeChecker
+    workflow = StateGraph(MyMessagesState)
+
+    # Define the Tool Node
+    tool_node = ToolNode(tools)
+
+    # Add Nodes
+    workflow.add_node("agent", agent_node)
+    workflow.add_node("tools", tool_node)
+
+    # Add Edges
+    workflow.add_edge(START, "agent")
+
+    # Conditional Edge: Agent -> Tools OR End
+    workflow.add_conditional_edges("agent", tools_condition)
+
+    # Normal Edge: Tools -> Agent (Loop back)
+    workflow.add_edge("tools", "agent")
+
+    return workflow.compile()
+
+
+def run_execution_loop(app: CompiledStateGraph, query: str) -> None:
+    """
+    Handles the I/O: sends the query to the app and prints the stream.
+    """
+    print(f"\n>>> User Query: {query}\n")
+
+    # Explicit Type Casting for MyPy strict mode
+    input_state: MyMessagesState = {
+        "messages": [HumanMessage(content=query)],
+        "llm_calls": 0,
+    }
+
     try:
-        # 这里的 invoke 是同步调用，适合简单测试
-        response = llm.invoke("你好，你是谁？请用一句话简短回答。")
-
-        print("\n=== 测试成功！模型回复如下 ===")
-        print(response.content)
+        # noinspection PyTypeChecker
+        output_state = app.invoke(input_state)
+        for m in output_state["messages"]:
+            m.pretty_print()
         print("==============================")
 
     except Exception as e:
-        print("\n!!! 连接失败 !!!")
-        print(f"错误信息: {e}")
-        # 可以在这里建议用户检查 .env
-        print("提示: 请检查 .env 文件中的 SILICONFLOW_API_KEY 是否正确。")
+        print(f"Error during execution: {e}")
 
 
 def main() -> None:
-    # 入口函数
-    test_llm_connection()
+    """
+    Orchestrator function.
+    """
+    # 1. Setup Resources
+    agent_node = build_agent_node()
+
+    # 2. Build Logic
+    agent_app = build_graph(agent_node)
+
+    # 3. Execute
+    user_query = "请计算123乘以456。"
+    run_execution_loop(agent_app, user_query)
 
 
 if __name__ == "__main__":
