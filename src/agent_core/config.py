@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     siliconflow_api_key: str
 
-    default_model: str = "Qwen/Qwen2.5-7B-Instruct"
+    qwen2_5_7b_instruct: str
 
     base_url: str = "https://api.siliconflow.cn/v1"
 
