@@ -1,4 +1,6 @@
+from agent_core.test_calculator import test_calculator
 from agent_core.test_chatbot import test_chatbot
+from agent_core.test_structured_output import test_structured_output
 
 
 def main() -> None:

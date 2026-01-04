@@ -10,7 +10,7 @@ from langgraph.graph.state import CompiledStateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
 from pydantic import BaseModel
 
-from agent_core.models import qwen2_5_instruct_llm
+from agent_core.llms import qwen2_5_instruct_llm
 from agent_core.tools import tools
 
 
