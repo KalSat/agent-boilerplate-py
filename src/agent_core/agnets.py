@@ -1,29 +1,32 @@
-from typing import Callable
+import operator
+from typing import Annotated, Callable
 
 from langchain_core.language_models import LanguageModelInput
-from langchain_core.messages import AIMessage
+from langchain_core.messages import AIMessage, AnyMessage
 from langchain_core.runnables import Runnable
 from langgraph.constants import START
-from langgraph.graph import StateGraph, MessagesState
+from langgraph.graph import StateGraph
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
+from pydantic import BaseModel
 
 from agent_core.models import qwen2_5_instruct_llm
 from agent_core.tools import tools
 
 
-class MyMessagesState(MessagesState):
+class MyMessagesState(BaseModel):
+    messages: Annotated[list[AnyMessage], operator.add]
     llm_calls: int
 
 
-def build_calculator_graph() -> CompiledStateGraph:
+def build_calculator_graph() -> CompiledStateGraph[MyMessagesState]:
     """
     Constructs the StateGraph logic (Nodes & Edges).
     Returns a compiled application ready to run.
     """
 
-    # noinspection PyTypeChecker
-    workflow = StateGraph(MyMessagesState)
+    workflow = StateGraph(MyMessagesState, None,
+                          input_schema=MyMessagesState, output_schema=MyMessagesState)
 
     # Define the Tool Node
     tool_node = ToolNode(tools)
@@ -55,10 +58,10 @@ def _build_calculator_agent_node() -> Callable[..., MyMessagesState]:
     # Define the Agent Node
     # Logic: Call the LLM with the current conversation state
     def call_model(state: MyMessagesState) -> MyMessagesState:
-        ai_message = llm_with_tools.invoke(state["messages"])
-        return {
-            "messages": [ai_message],
-            "llm_calls": state.get('llm_calls', 0) + 1,
-        }
+        ai_message: AIMessage = llm_with_tools.invoke(state.messages)
+        return MyMessagesState(
+            messages=[ai_message],
+            llm_calls=state.llm_calls + 1,
+        )
 
     return call_model
