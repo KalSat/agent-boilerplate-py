@@ -3,7 +3,7 @@ name = "agent-core"
 version = "0.1.0"
 description = "My awesome agent project"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = [
     "langchain>=1.2.0",
     "langchain-openai>=1.1.6",
@@ -29,19 +29,41 @@ packages = ["src/agent_core"]
 
 # --- Ruff config ---
 [tool.ruff]
-line-length = 100
 target-version = "py312"
+line-length = 100
 
 [tool.ruff.lint]
-select = ["E", "W", "F", "I"] # Enable Error, Warning, Pyflakes, and import sorting
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # Pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "UP",   # pyupgrade
+    "ARG",  # flake8-unused-arguments
+    "SIM",  # flake8-simplify
+    "PTH",  # flake8-use-pathlib
+    "RET",  # flake8-return
+    "N",    # pep8-naming
+    "RUF",  # Ruff-specific rules
+    "PL",   # Pylint
+    "T20",  # flake8-print
+    "PERF", # Perflint
+]
 ignore = []
+allowed-confusables = ["，", "。", "：", "“", "”"]
 
 [tool.ruff.format]
 quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = true
 
 # --- Mypy config ---
 [tool.mypy]
-python_version = "3.14"
+python_version = "3.12"
 mypy_path = "src"
 files = ["src", "tests"]
 strict = true

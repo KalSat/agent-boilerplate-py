@@ -1,7 +1,12 @@
+import logging
+from pathlib import Path
+
 from langchain_core.messages import HumanMessage
 from langgraph.graph.state import CompiledStateGraph
 
-from agent_core.agnets import MyMessagesState, build_calculator_graph
+from agent_core.calculator.agnets import MyMessagesState, build_calculator_graph
+
+_logger = logging.getLogger(__name__)
 
 
 def _save_graph_image(agent_graph: CompiledStateGraph) -> None:
@@ -10,18 +15,18 @@ def _save_graph_image(agent_graph: CompiledStateGraph) -> None:
     """
     try:
         graph_image = agent_graph.get_graph(xray=True).draw_mermaid_png()
-        with open("agent_graph.png", "wb") as f:
+        with Path("agent_graph.png").open("wb") as f:
             f.write(graph_image)
-        print("Graph image saved as agent_graph.png")
+        _logger.info("Graph image saved as agent_graph.png")
     except Exception:
-        print("Failed to save graph image.")
+        _logger.error("Failed to save graph image.")
 
 
 def _run_execution_loop(agent_graph: CompiledStateGraph[MyMessagesState], query: str) -> None:
     """
     Handles the I/O: sends the query to the app and prints the stream.
     """
-    print(f"\n>>> User Query: {query}\n")
+    print(f"\n>>> User Query: {query}\n")  # noqa: T201
 
     input_state = MyMessagesState(
         messages=[HumanMessage(content=query)],
@@ -32,10 +37,10 @@ def _run_execution_loop(agent_graph: CompiledStateGraph[MyMessagesState], query:
         output_state = agent_graph.invoke(input_state)
         for m in output_state["messages"]:
             m.pretty_print()
-        print("==============================")
+        print("==============================")  # noqa: T201
 
     except Exception as e:
-        print(f"Error during execution: {e}")
+        print(f"Error during execution: {e}")  # noqa: T201
 
 
 def test_calculator() -> None:

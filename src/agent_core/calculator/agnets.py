@@ -1,5 +1,6 @@
 import operator
-from typing import Annotated, Callable
+from collections.abc import Callable
+from typing import Annotated
 
 from langchain_core.language_models import LanguageModelInput
 from langchain_core.messages import AIMessage, AnyMessage
@@ -10,8 +11,8 @@ from langgraph.graph.state import CompiledStateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
 from pydantic import BaseModel
 
+from agent_core.calculator.tools import tools
 from agent_core.llms import qwen2_5_instruct_llm
-from agent_core.tools import tools
 
 
 class MyMessagesState(BaseModel):
@@ -25,8 +26,12 @@ def build_calculator_graph() -> CompiledStateGraph[MyMessagesState]:
     Returns a compiled application ready to run.
     """
 
-    workflow = StateGraph(MyMessagesState, None,
-                          input_schema=MyMessagesState, output_schema=MyMessagesState)
+    workflow = StateGraph(
+        MyMessagesState,
+        None,
+        input_schema=MyMessagesState,
+        output_schema=MyMessagesState,
+    )
 
     # Define the Tool Node
     tool_node = ToolNode(tools)
