@@ -17,3 +17,5 @@ wheels/
 # Local environment variables
 .env
 
+# Operating system files
+.DS_Store

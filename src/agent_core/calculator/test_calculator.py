@@ -2,9 +2,10 @@ import logging
 from pathlib import Path
 
 from langchain_core.messages import HumanMessage
+from langgraph.graph import MessagesState
 from langgraph.graph.state import CompiledStateGraph
 
-from agent_core.calculator.agnets import MyMessagesState, build_calculator_graph
+from agent_core.calculator.agents import create_calculator_agent
 
 _logger = logging.getLogger(__name__)
 
@@ -22,18 +23,18 @@ def _save_graph_image(agent_graph: CompiledStateGraph) -> None:
         _logger.error("Failed to save graph image.")
 
 
-def _run_execution_loop(agent_graph: CompiledStateGraph[MyMessagesState], query: str) -> None:
+def _run_execution_loop(agent_graph: CompiledStateGraph, query: str) -> None:
     """
     Handles the I/O: sends the query to the app and prints the stream.
     """
     print(f"\n>>> User Query: {query}\n")  # noqa: T201
 
-    input_state = MyMessagesState(
+    input_state = MessagesState(
         messages=[HumanMessage(content=query)],
-        llm_calls=0,
     )
 
     try:
+        # noinspection PyTypeChecker
         output_state = agent_graph.invoke(input_state)
         for m in output_state["messages"]:
             m.pretty_print()
@@ -45,10 +46,11 @@ def _run_execution_loop(agent_graph: CompiledStateGraph[MyMessagesState], query:
 
 def test_calculator() -> None:
     # Build Agent
-    agent_graph = build_calculator_graph()
+    # agent_graph = build_calculator_graph()
+    agent_graph = create_calculator_agent()
 
     _save_graph_image(agent_graph)
 
     # Execute
-    user_query = "请计算123乘以456。"
+    user_query = "请计算123×456+800÷2。"  # noqa: RUF001
     _run_execution_loop(agent_graph, user_query)

@@ -3,17 +3,6 @@ from langchain_core.tools import BaseTool, tool
 
 # Define tools
 @tool
-def multiply(a: int, b: int) -> int:
-    """Multiply `a` and `b`.
-
-    Args:
-        a: First int
-        b: Second int
-    """
-    return a * b
-
-
-@tool
 def add(a: int, b: int) -> int:
     """Adds `a` and `b`.
 
@@ -22,6 +11,28 @@ def add(a: int, b: int) -> int:
         b: Second int
     """
     return a + b
+
+
+@tool
+def subtract(a: int, b: int) -> int:
+    """Subtract `b` from `a`.
+
+    Args:
+        a: First int
+        b: Second int
+    """
+    return a - b
+
+
+@tool
+def multiply(a: int, b: int) -> int:
+    """Multiply `a` and `b`.
+
+    Args:
+        a: First int
+        b: Second int
+    """
+    return a * b
 
 
 @tool
@@ -36,4 +47,4 @@ def divide(a: int, b: int) -> float:
 
 
 # Augment the LLM with tools
-tools: list[BaseTool] = [add, multiply, divide]
+tools: list[BaseTool] = [add, subtract, multiply, divide]
