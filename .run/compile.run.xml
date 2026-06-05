@@ -1,7 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="compile" type="UvRunConfigurationType" factoryName="UvRunConfigurationType">
     <option name="args">
-      <list />
+      <list>
+        <option value="check" />
+      </list>
     </option>
     <option name="checkSync" value="true" />
     <option name="debugJustMyCode" value="false" />
@@ -9,14 +11,11 @@
       <map />
     </option>
     <option name="runType" value="MODULE" />
-    <option name="scriptOrModule" value="mypy" />
+    <option name="scriptOrModule" value="poethepoet" />
     <option name="uvArgs">
       <list />
     </option>
     <option name="uvSdkKey" value="uv (agent-core)" />
-    <method v="2">
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="format" run_configuration_type="UvRunConfigurationType" />
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="lint" run_configuration_type="UvRunConfigurationType" />
-    </method>
+    <method v="2" />
   </configuration>
 </component>

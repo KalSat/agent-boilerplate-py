@@ -1,19 +1,17 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="format" type="UvRunConfigurationType" factoryName="UvRunConfigurationType">
+  <configuration default="false" name="test" type="UvRunConfigurationType" factoryName="UvRunConfigurationType">
     <option name="args">
       <list>
-        <option value="format" />
-        <option value="src" />
-        <option value="tests" />
+        <option value="test" />
       </list>
     </option>
-    <option name="checkSync" value="false" />
+    <option name="checkSync" value="true" />
     <option name="debugJustMyCode" value="false" />
     <option name="env">
       <map />
     </option>
     <option name="runType" value="MODULE" />
-    <option name="scriptOrModule" value="ruff" />
+    <option name="scriptOrModule" value="poethepoet" />
     <option name="uvArgs">
       <list />
     </option>

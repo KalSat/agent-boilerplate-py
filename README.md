@@ -32,11 +32,11 @@ QWEN2_5_7B_INSTRUCT=Qwen/Qwen2.5-7B-Instruct
 ### 3. Run the Agent
 
 ```bash
-# Launch the interactive CLI
-make run
+# List available tasks
+uv run poe --help
 
-# Or directly with uv
-uv run python -m agent_boilerplate.main
+# Run the interactive CLI
+uv run poe run
 ```
 
 ## 📁 Project Structure
