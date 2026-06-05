@@ -49,7 +49,7 @@ def test_calculator() -> None:
     # agent_graph = build_calculator_graph()
     agent_graph = create_calculator_agent()
 
-    _save_graph_image(agent_graph)
+    # _save_graph_image(agent_graph)
 
     # Execute
     user_query = "请计算123×456+800÷2。"  # noqa: RUF001

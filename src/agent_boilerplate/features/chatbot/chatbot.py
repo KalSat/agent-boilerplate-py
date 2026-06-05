@@ -8,9 +8,7 @@ from agent_boilerplate.shared.llms import small_fast_llm
 def test_chatbot() -> None:
     print("聊天机器人启动...")
     messages: list[AnyMessage] = [
-        SystemMessage(
-            content=PROMPTS["friendly"],
-        ),
+        SystemMessage(content=PROMPTS["concise"]),
     ]
 
     print("输入 'exit' 退出对话。")

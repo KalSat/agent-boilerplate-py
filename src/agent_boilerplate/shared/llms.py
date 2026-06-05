@@ -21,4 +21,5 @@ small_fast_llm: BaseChatModel = ChatOpenAI(
     api_key=settings.api_key,
     base_url=settings.base_url,
     temperature=0.3,
+    extra_body={"enable_thinking": False},
 )
