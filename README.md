@@ -19,14 +19,15 @@ cp .env.example .env
 Add your API credentials to `.env`:
 
 ```bash
-# SiliconFlow API key
-SILICONFLOW_API_KEY=your-key-here
+# the LLM base URL
+BASE_URL=https://api.siliconflow.cn/v1
+
+# LLM API key
+API_KEY=your-key-here
 
 # Model name to use (e.g. Qwen/Qwen2.5-7B-Instruct)
-QWEN2_5_7B_INSTRUCT=Qwen/Qwen2.5-7B-Instruct
-
-# Optional: override the default base URL
-# BASE_URL=https://api.siliconflow.cn/v1
+MODEL=THUDM/GLM-Z1-9B-0414
+SMALL_FAST_MODEL=Qwen/Qwen3-8B
 ```
 
 ### 3. Run the Agent
