@@ -44,23 +44,24 @@ uv run poe run
 ```yaml
 src/
 └── agent_boilerplate/
+    ├── main.py                   # CLI entry point
     ├── features/
+    │   ├── __init__.py
     │   ├── calculator/
     │   │   ├── agent.py          # ReAct agent definition
     │   │   ├── calculator.py     # Calculator feature entry point
-    │   │   ├── graphs.py         # LangGraph graph definition
     │   │   ├── prompts.py        # System prompts and templates
     │   │   └── tools.py          # Tool definitions
     │   ├── chatbot/
-    │   │   └── chatbot.py        # Multi-turn chatbot implementation
+    │   │   ├── chatbot.py        # Multi-turn chatbot implementation
+    │   │   └── prompts.py        # Chatbot prompts and templates
     │   └── structured_output/
     │       ├── models.py         # Pydantic output models
     │       └── structured_output.py  # Structured output feature entry point
     ├── shared/
     │   ├── config.py             # Pydantic settings (loads from .env)
     │   └── llms.py               # LLM client setup
-    ├── utils/
-    │   └── time_util.py          # Utility functions
-    └── main.py                   # CLI entry point
+    └── utils/
+        └── time_util.py          # Utility functions
 tests/                            # Pytest test suite
 ```
