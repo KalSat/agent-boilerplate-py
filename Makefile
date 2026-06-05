@@ -19,4 +19,4 @@ test:
 	uv run pytest
 
 run:
-	uv run python -m agent_core.main
+	uv run python -m agent_boilerplate.main

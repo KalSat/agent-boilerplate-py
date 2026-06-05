@@ -2,9 +2,9 @@
 import logging
 from collections.abc import Callable
 
-from agent_core.calculator import test_calculator
-from agent_core.chatbot import test_chatbot
-from agent_core.structured import test_structured_output
+from agent_boilerplate.features.calculator import test_calculator
+from agent_boilerplate.features.chatbot import test_chatbot
+from agent_boilerplate.features.structured_output import test_structured_output
 
 logging.basicConfig(level=logging.INFO)
 

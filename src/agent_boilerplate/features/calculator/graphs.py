@@ -11,8 +11,8 @@ from langgraph.graph.state import CompiledStateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
 from pydantic import BaseModel
 
-from agent_core.calculator.tools import tools
-from agent_core.llms import qwen2_5_instruct_llm
+from agent_boilerplate.features.calculator.tools import tools
+from agent_boilerplate.shared.llms import qwen2_5_instruct_llm
 
 
 class MyMessagesState(BaseModel):

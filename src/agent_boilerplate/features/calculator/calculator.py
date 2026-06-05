@@ -5,7 +5,7 @@ from langchain_core.messages import HumanMessage
 from langgraph.graph import MessagesState
 from langgraph.graph.state import CompiledStateGraph
 
-from agent_core.calculator.agents import create_calculator_agent
+from agent_boilerplate.features.calculator.agent import create_calculator_agent
 
 _logger = logging.getLogger(__name__)
 

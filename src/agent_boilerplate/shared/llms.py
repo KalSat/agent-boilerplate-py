@@ -3,7 +3,7 @@ import logging
 from langchain_core.language_models import BaseChatModel
 from langchain_openai import ChatOpenAI
 
-from agent_core.config import settings
+from agent_boilerplate.shared.config import settings
 
 _logger = logging.getLogger(__name__)
 

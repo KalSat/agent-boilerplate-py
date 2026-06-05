@@ -1,7 +1,7 @@
 # ruff: noqa: T201
 from langchain_core.messages import AIMessage, AnyMessage, HumanMessage, SystemMessage
 
-from agent_core.llms import qwen2_5_instruct_llm
+from agent_boilerplate.shared.llms import qwen2_5_instruct_llm
 
 
 def test_chatbot() -> None:
