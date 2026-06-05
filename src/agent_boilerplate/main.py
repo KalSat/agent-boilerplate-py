@@ -8,17 +8,17 @@ from agent_boilerplate.features.structured_output import test_structured_output
 
 logging.basicConfig(level=logging.INFO)
 
-_options: list[Callable[[], None]] = [
-    test_calculator,
-    test_structured_output,
-    test_chatbot,
+_options: list[tuple[str, Callable[[], None]]] = [
+    ("聊天机器人 (流式输出)", test_chatbot),
+    ("电影推荐 (结构化输出)", test_structured_output),
+    ("计算器 (工具调用)", test_calculator),
 ]
 
 
 def main() -> None:
     print("Select an option by number:")
     for idx, option in enumerate(_options, start=1):
-        print(f"{idx}. {option.__name__}")
+        print(f"{idx}. {option[0]}")
 
     try:
         choice = input("Enter choice: ").strip()
@@ -35,7 +35,7 @@ def main() -> None:
         print("Invalid selection.")
         return
 
-    func = _options[idx - 1]
+    func = _options[idx - 1][1]
     func()
 
 

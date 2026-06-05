@@ -12,7 +12,7 @@ from langgraph.prebuilt import ToolNode, tools_condition
 from pydantic import BaseModel
 
 from agent_boilerplate.features.calculator.tools import tools
-from agent_boilerplate.shared.llms import qwen2_5_instruct_llm
+from agent_boilerplate.shared.llms import base_llm
 
 
 class MyMessagesState(BaseModel):
@@ -58,7 +58,7 @@ def _build_calculator_agent_node() -> Callable[..., MyMessagesState]:
     """
 
     # Bind tools immediately here
-    llm_with_tools: Runnable[LanguageModelInput, AIMessage] = qwen2_5_instruct_llm.bind_tools(tools)
+    llm_with_tools: Runnable[LanguageModelInput, AIMessage] = base_llm.bind_tools(tools)
 
     # Define the Agent Node
     # Logic: Call the LLM with the current conversation state

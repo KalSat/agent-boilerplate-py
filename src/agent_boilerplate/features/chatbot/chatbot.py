@@ -1,14 +1,15 @@
 # ruff: noqa: T201
 from langchain_core.messages import AIMessage, AnyMessage, HumanMessage, SystemMessage
 
-from agent_boilerplate.shared.llms import qwen2_5_instruct_llm
+from agent_boilerplate.features.chatbot.prompts import PROMPTS
+from agent_boilerplate.shared.llms import small_fast_llm
 
 
 def test_chatbot() -> None:
     print("聊天机器人启动...")
     messages: list[AnyMessage] = [
         SystemMessage(
-            content="你叫小智，是一名乐于助人的智能助手。请在对话中保持友好、有耐心、温和的语气。",
+            content=PROMPTS["friendly"],
         ),
     ]
 
@@ -21,9 +22,9 @@ def test_chatbot() -> None:
 
         messages.append(HumanMessage(content=user_input))
 
-        print("小智: ", end="", flush=True)
+        print("机器人: \n", end="", flush=True)
         full_reply = ""
-        for chunk in qwen2_5_instruct_llm.stream(messages):
+        for chunk in small_fast_llm.stream(messages):
             if chunk.content and isinstance(chunk.content, str):
                 print(chunk.content, end="", flush=True)
                 full_reply += chunk.content

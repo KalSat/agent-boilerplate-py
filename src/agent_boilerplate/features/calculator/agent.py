@@ -5,7 +5,7 @@ from langgraph.graph.state import CompiledStateGraph
 
 from agent_boilerplate.features.calculator.prompts import SYSTEM_PROMPT
 from agent_boilerplate.features.calculator.tools import tools
-from agent_boilerplate.shared.llms import qwen2_5_instruct_llm
+from agent_boilerplate.shared.llms import base_llm
 
 
 class CustomState(AgentState):
@@ -21,7 +21,7 @@ class CustomContext:
 def create_calculator_agent() -> CompiledStateGraph:
     # noinspection PyTypeChecker
     return create_agent(
-        model=qwen2_5_instruct_llm,
+        model=base_llm,
         system_prompt=SYSTEM_PROMPT.strip(),
         tools=tools,
         state_schema=CustomState,
