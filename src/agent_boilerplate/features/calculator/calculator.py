@@ -29,15 +29,20 @@ def _run_execution_loop(agent_graph: CompiledStateGraph, query: str) -> None:
     """
     print(f"\n>>> User Query: {query}\n")  # noqa: T201
 
-    input_state = MessagesState(
-        messages=[HumanMessage(content=query)],
-    )
-
     try:
-        # noinspection PyTypeChecker
-        output_state = agent_graph.invoke(input_state)
-        for m in output_state["messages"]:
-            m.pretty_print()
+        stream = agent_graph.stream(
+            MessagesState(messages=[HumanMessage(content=query)]),
+            # stream_mode="updates" —— 节点级流式：每当某个节点完成执行并更新 state 后，
+            # 推送一个 chunk (包含该节点对 state 的变更)，每条 message 均为完整消息;
+            # 若改为 'values'，则每次推送完整的全量 state。
+            stream_mode="updates",
+        )
+        for chunk in stream:
+            for update in chunk.values():
+                messages = update["messages"]
+                if messages:
+                    for m in messages:
+                        m.pretty_print()
         print("==============================")  # noqa: T201
 
     except Exception as e:
